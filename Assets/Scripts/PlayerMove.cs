@@ -30,15 +30,15 @@ public class PlayerMove : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(1, 1, 0, 0.75F);
-        Gizmos.DrawSphere(transform.position + transform.forward* _obstacleDistance, transform.localScale.x - 1f);
+        Gizmos.DrawSphere(transform.position + transform.forward* _obstacleDistance, transform.localScale.x - 0.2f);
     }
     private void FixedUpdate()
     {
         isGrounded = GroundCheck();
         RaycastHit hit;
-        if (canJump)
+        if (canJump&&!isFinish)
         {
-            if (Physics.SphereCast(transform.position, transform.localScale.x - 1f, transform.forward, out hit, _obstacleDistance, _obstacleLayer))
+            if (Physics.SphereCast(transform.position, transform.localScale.x - 0.2f, transform.forward, out hit, _obstacleDistance, _obstacleLayer))
             {
                 isJumping = false;
                 Debug.Log("Obstacle");
@@ -71,7 +71,7 @@ public class PlayerMove : MonoBehaviour
         {
 
             gameManager.onDoorRange.Invoke();
-            canJump = false;
+
         }
     }
     private void Finish()
