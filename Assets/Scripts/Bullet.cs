@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
     }
     private void Shot()
     {
-        infectionRadius = transform.localScale.x * 5;
+        infectionRadius = transform.localScale.x * 2;
         rb.isKinematic = false;
         rb.AddForce(_playerShot.transform.forward * 30f, ForceMode.Impulse);
     }

@@ -6,7 +6,9 @@ public class Obstacle : MonoBehaviour
 {
     [SerializeField] private Bullet _bullet;
     [SerializeField] private LayerMask _obstacleLayerMask;
+    [SerializeField] private ParticleSystem _explosionParticle;
     private MeshRenderer mesh;
+    
     private void Start()
     {
         mesh = GetComponent<MeshRenderer>();
@@ -26,7 +28,15 @@ public class Obstacle : MonoBehaviour
     private void Explosion()
     {
         mesh.material.color = Color.red;
-        Destroy(gameObject);
-        
+        _explosionParticle.Play();
+        StartCoroutine(ParticleHalfAnimTime());
     }
-}
+    IEnumerator ParticleHalfAnimTime()
+    {
+        yield return new WaitForSeconds(0.5f);
+        mesh.enabled = false;
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
+    }
+
+    }

@@ -18,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping = false;
     private bool isGrounded = false;
     private bool isFinish = false;
+    private bool canJump = true;
     private Rigidbody rb;
     private void Start()
     {
@@ -26,14 +27,18 @@ public class PlayerMove : MonoBehaviour
         gameManager.onFinish.AddListener(Finish);
         
     }
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 1, 0, 0.75F);
+        Gizmos.DrawSphere(transform.position + transform.forward* _obstacleDistance, transform.localScale.x - 1f);
+    }
     private void FixedUpdate()
     {
         isGrounded = GroundCheck();
         RaycastHit hit;
-        if (!Physics.SphereCast(transform.position, transform.localScale.x, transform.forward, out hit, _doorDistance, _doorLayer)&&!isFinish)
+        if (canJump)
         {
-            if (Physics.SphereCast(transform.position, transform.localScale.x, transform.forward, out hit, _obstacleDistance, _obstacleLayer))
+            if (Physics.SphereCast(transform.position, transform.localScale.x - 1f, transform.forward, out hit, _obstacleDistance, _obstacleLayer))
             {
                 isJumping = false;
                 Debug.Log("Obstacle");
@@ -61,9 +66,12 @@ public class PlayerMove : MonoBehaviour
                 }
             }
         }
-        else
+
+        if (Physics.SphereCast(transform.position, transform.localScale.x, transform.forward, out hit, _doorDistance, _doorLayer)&&!isFinish)
         {
+
             gameManager.onDoorRange.Invoke();
+            canJump = false;
         }
     }
     private void Finish()
@@ -80,5 +88,13 @@ public class PlayerMove : MonoBehaviour
         {
             return false;
         }
+    }
+    private void OnMouseDown()
+    {
+        canJump = false;
+    }
+    private void OnMouseUp()
+    {
+        canJump = true;
     }
 }
